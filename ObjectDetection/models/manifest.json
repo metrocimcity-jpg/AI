@@ -1,0 +1,48 @@
+{
+  "person_yolo": {
+    "path": "yolo11s.onnx",
+    "sha256": "ade501f5c53ea4c771e2c014c86ff79e187698ec9d56442473b4f00a73c8fbc3",
+    "task": "detect",
+    "imgsz": 640,
+    "classes": ["person"],
+    "license": "AGPL-3.0"
+  },
+  "pose_yolo": {
+    "path": "yolo11s-pose.onnx",
+    "sha256": "8a002d24c9e35f734aac84f626bb6a36a3117d44c2d7841dea7de35994c83846",
+    "task": "pose",
+    "imgsz": 640,
+    "classes": ["person"],
+    "license": "AGPL-3.0"
+  },
+  "ppe_yolo": {
+    "path": "ppe_yolo11s.onnx",
+    "sha256": "f3d600afc077aac988a25f6f51a04f80a81857fa30943fc91fb11eebc0afe1e4",
+    "task": "detect",
+    "imgsz": 640,
+    "classes_file": "config/classes.yaml#ppe",
+    "license": "AGPL-3.0"
+  },
+  "materials_yolo": {
+    "path": "materials_yolo11m.onnx",
+    "sha256": "3050257e31edbac2cf14aa4ca329b2589594e2ff1d5f36aad36f1028b6ccd70d",
+    "task": "detect",
+    "imgsz": 640,
+    "classes_file": "config/classes.yaml#materials_model",
+    "license": "AGPL-3.0"
+  },
+  "yunet": {
+    "path": "face_detection_yunet_2023mar.onnx",
+    "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+    "task": "face_det",
+    "imgsz": 320,
+    "license": "MIT"
+  },
+  "sface": {
+    "path": "face_recognition_sface_2021dec.onnx",
+    "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+    "task": "face_embed",
+    "dim": 128,
+    "license": "Apache-2.0"
+  }
+}

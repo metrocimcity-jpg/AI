@@ -1,0 +1,17 @@
+---
+description: Python/FastAPI backend conventions
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Backend rules
+- Layout is defined in `docs/02-ARCHITECTURE.md`. Do not invent new top-level packages.
+- Use `async def` for API routes; run inference in a **separate worker thread/process** per camera, never in the event loop.
+- Pipeline stages are classes implementing `process(frame_ctx) -> frame_ctx` (see `pipeline/base.py`). Stages are independently toggleable via settings.
+- Use a bounded `queue.Queue(maxsize=2)` between capture and inference and **drop old frames** (latency > completeness).
+- Pydantic v2 models for all request/response/event schemas; schemas mirror `docs/05-API-SPEC.md`.
+- Logging with `structlog` or stdlib `logging` (JSON optional). No `print`.
+- Type hints everywhere, `ruff` + `mypy --strict` clean, `pytest` for logic modules.
+- Event de-duplication: the same (track_id, event_type) must be debounced via `cooldown_seconds` from settings.
+- Save snapshots/clips to `./data/snapshots` and `./data/clips`; store only relative paths in DB.
+- Never log or return raw face embeddings from the API.

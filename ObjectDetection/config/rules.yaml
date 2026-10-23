@@ -1,0 +1,53 @@
+rules:
+  - id: no_helmet
+    severity: critical
+    when: person.ppe.helmet == "missing" and not person.in_zone("office")
+    min_duration_s: 2
+    cooldown_s: 60
+    message: Worker without helmet
+  - id: no_vest
+    severity: warning
+    when: person.ppe.vest == "missing"
+    min_duration_s: 3
+    cooldown_s: 120
+    message: Worker without hi-vis vest
+  - id: fall_detected
+    severity: critical
+    when: posture.transition in ["standing->lying", "walking->lying", "climbing->lying"]
+    cooldown_s: 30
+    message: Possible fall
+  - id: man_down
+    severity: critical
+    when: posture.state == "lying" and posture.duration_s > 3
+    cooldown_s: 30
+    message: Person lying down
+  - id: crawling_in_restricted
+    severity: warning
+    when: posture.state == "crawling" and person.in_zone("restricted")
+    cooldown_s: 60
+    message: Person crawling in a restricted zone
+  - id: restricted_zone_intrusion
+    severity: critical
+    when: person.in_zone("restricted") and not worker.authorized
+    cooldown_s: 20
+    message: Intrusion in a restricted zone
+  - id: unknown_face
+    severity: warning
+    when: face.result == "unknown" and face.quality >= 0.6
+    cooldown_s: 300
+    message: Unknown face
+  - id: motion_after_hours
+    severity: warning
+    when: motion.detected and schedule.is_closed
+    cooldown_s: 60
+    message: Motion detected after hours
+  - id: person_near_machinery
+    severity: critical
+    when: person.distance_to("machinery|vehicle|excavator|dump_truck|loader|crane|forklift|concrete_mixer") < 3.0
+    cooldown_s: 30
+    message: Person near machinery
+  - id: material_blocking_exit
+    severity: info
+    when: object.class in materials and object.in_zone("walkway")
+    cooldown_s: 120
+    message: Material blocking a walkway

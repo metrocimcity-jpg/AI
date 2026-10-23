@@ -1,0 +1,80 @@
+runtime:
+  provider_priority: [tensorrt, cuda, openvino, directml, cpu]
+  max_cameras: 8
+  log_level: INFO
+  host: 127.0.0.1
+  port: 8000
+
+site:
+  name: SiteGuard Vision
+  closed_hours: ["18:00-06:00"]
+
+pipeline:
+  stages: [motion, person, tracker, pose, posture, materials, ppe, face, rules]
+  strides: {pose: 2, ppe: 2, materials: 3, face: 5}
+  motion_gate: true
+  debug_overlay: false
+  loop_files: true
+
+detector:
+  person: {model: person_yolo, conf: 0.35, iou: 0.5}
+  pose: {model: pose_yolo, conf: 0.35, iou: 0.5}
+  ppe: {model: materials_yolo, conf: 0.25, iou: 0.5}
+  materials: {model: materials_yolo, conf: 0.40, iou: 0.5, tile: 640, overlap: 0.2}
+
+motion:
+  width: 320
+  history: 300
+  var_threshold: 25
+  min_area: 400
+
+posture:
+  smoothing:
+    window: 10
+    min_dwell_ms: 800
+    lying_dwell_ms: 1500
+    crawling_dwell_ms: 1500
+    fall_window_s: 1.0
+    fall_downward_speed: 0.35
+    lying_alert_seconds: 3
+
+ppe:
+  containment: 0.5
+  vote_window: 15
+  keypoint_conf: 0.3
+
+face:
+  enabled: false
+  detector: yunet
+  recognizer: sface
+  match_threshold: 0.36
+  min_face_px: 80
+  min_blur: 40
+  max_yaw: 45
+  margin: 0.05
+  reverify_frames: 30
+
+events:
+  save_clips: false
+  clip_seconds: 10
+  cooldown_seconds:
+    no_helmet: 60
+    no_vest: 120
+    lying: 30
+    man_down: 30
+    fall_detected: 30
+    intrusion: 20
+    unknown_face: 300
+    motion_after_hours: 60
+    person_near_machinery: 30
+    material_blocking_exit: 120
+    crawling_in_restricted: 60
+    restricted_zone_intrusion: 20
+
+near_machinery:
+  max_bbox_heights: 3.0
+
+retention_days: 30
+
+auth:
+  token_minutes: 720

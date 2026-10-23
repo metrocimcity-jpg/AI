@@ -1,0 +1,16 @@
+---
+description: Model loading, inference, posture and rule-engine rules
+globs: backend/app/{models,pipeline,ml}/**/*.py
+alwaysApply: false
+---
+
+# ML rules
+- Inference via **ONNX Runtime** by default; providers priority: TensorRT → CUDA → OpenVINO → DirectML → CPU (configurable, auto-fallback with a logged warning).
+- One `ModelRegistry` loads models lazily from `models/manifest.json` (name, path, sha256, input size, classes, license). Verify sha256 on load.
+- Detector wrapper API: `detect(frame) -> list[Detection]` with `bbox_xyxy`, `score`, `class_id`, `class_name`. Letterbox + NMS live in the wrapper, not in callers.
+- Thresholds (conf, iou) are per-class configurable in `config/settings.yaml`.
+- **Posture is computed from pose keypoints + temporal smoothing**, not from the detector alone. Implement per `docs/04-CLASSES-AND-RULES.md`. Use a 10-frame majority vote and min dwell time before changing state.
+- PPE association: a helmet/vest box belongs to a person if IoU/containment with the person's head/torso region exceeds the configured threshold; "missing PPE" is inferred only when the body region is clearly visible (keypoint confidence gate).
+- Face recognition runs only on person crops where the face is large enough (min 80 px), throttled to every N frames per track, and results are cached per `track_id`.
+- Motion detection (MOG2/frame diff) runs at reduced resolution (e.g. 320 px wide) and supports polygon ROIs.
+- Benchmark script in `scripts/benchmark.py` must report per-stage latency; target budgets are in `docs/02-ARCHITECTURE.md`.

@@ -1,0 +1,14 @@
+services:
+  siteguard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ../data:/app/data
+      - ../models:/app/models
+      - ../config:/app/config
+    environment:
+      SITEGUARD_HOST: 0.0.0.0
+      FACE_RECOGNITION_ENABLED: "false"

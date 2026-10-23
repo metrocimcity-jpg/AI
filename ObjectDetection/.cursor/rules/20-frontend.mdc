@@ -1,0 +1,16 @@
+---
+description: React/TypeScript/Tailwind dashboard conventions
+globs: frontend/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Frontend rules
+- React 18 + TS strict, functional components, hooks only. One component per file, PascalCase.
+- Styling: Tailwind + shadcn/ui. Dark mode default (control-room look), light mode supported via CSS variables.
+- **Offline**: self-host fonts via `@fontsource/inter` and `@fontsource/jetbrains-mono` (npm packages bundled by Vite). No `<link>` to external hosts, no external images.
+- Server state: TanStack Query. Live state (events, tracks, FPS): Zustand store fed by a single WebSocket client with auto-reconnect and backoff.
+- Video: `<img src="/api/cameras/{id}/stream.mjpg">` plus a `<canvas>` overlay for boxes/skeletons drawn client-side from WS metadata (so overlays can be toggled without re-encoding).
+- Every page needs loading, empty and error states. Accessible: keyboard navigation, aria labels, contrast AA.
+- Severity colors (consistent everywhere): critical `red-500`, warning `amber-500`, info `sky-500`, ok `emerald-500`.
+- Keep API types in `src/api/types.ts` mirroring `docs/05-API-SPEC.md`.
+- Charts: Recharts only. Tables: TanStack Table. Icons: lucide-react.

@@ -1,0 +1,43 @@
+person: [person]
+
+# YOLO11s PPE model (nduka1999/nd_ppe_yolo11s). Order is the ONNX class index.
+ppe:
+  - helmet
+  - no_helmet
+  - vest
+  - no_vest
+  - person
+
+# Objects the construction model can count. The same model also supplies helmet and vest.
+materials:
+  - safety_cone
+  - machinery
+  - utility_pole
+  - vehicle
+
+machinery:
+  - excavator
+  - dump_truck
+  - concrete_mixer
+  - forklift
+  - crane
+  - loader
+
+# YOLO11m construction-hazard model. Order is the ONNX class index.
+materials_model:
+  - helmet
+  - face_mask
+  - no_helmet
+  - no_face_mask
+  - no_vest
+  - person
+  - safety_cone
+  - vest
+  - machinery
+  - utility_pole
+  - vehicle
+
+hazards:
+  - fire
+  - smoke
+  - spill

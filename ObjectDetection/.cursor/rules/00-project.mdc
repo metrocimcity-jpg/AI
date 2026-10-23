@@ -1,0 +1,28 @@
+---
+description: Core project goals, stack and hard constraints for SiteGuard Vision
+alwaysApply: true
+---
+
+# SiteGuard Vision — project rules
+
+## Goal
+Offline construction-site safety dashboard: person posture, PPE, materials/machinery detection, motion detection and face recognition, with real-time alerts.
+
+## HARD CONSTRAINTS (never violate)
+1. **100% offline at runtime.** No CDN links, no Google Fonts, no remote APIs, no telemetry, no model auto-download. All models, fonts, icons and JS assets are local/bundled.
+2. Models are loaded from `./models/` only. Never call `YOLO("yolo11n.pt")`-style auto-download; always use an explicit local path and fail with a clear error if the file is missing.
+3. Face data (embeddings, photos) stays local, encrypted at rest where feasible, with an admin-controlled delete/export. Face recognition is **opt-in via config** (`FACE_RECOGNITION_ENABLED`).
+4. Everything runs on CPU as a baseline; GPU (CUDA/TensorRT, OpenVINO, DirectML) is an optional accelerator selected via config.
+
+## Stack
+- Backend: Python 3.11, FastAPI, Uvicorn, Pydantic v2, SQLAlchemy 2 + SQLite (WAL), OpenCV, ONNX Runtime (primary), NumPy
+- Realtime: WebSocket for events/metrics, MJPEG (or WebRTC later) for video
+- Frontend: React 18 + Vite + TypeScript, Tailwind CSS, shadcn/ui, Recharts, Zustand, TanStack Query, lucide-react
+- Packaging: Docker Compose (offline image bundle) and a plain `run.sh` / `run.bat`
+
+## Working style
+- Build incrementally by phase (see `docs/08-TASKS.md`). Each phase must run end-to-end before the next.
+- Keep modules small and typed. Add tests for posture logic, rule engine and API.
+- Prefer config (`config/settings.yaml` + `.env`) over hardcoded values.
+- When unsure about a model or class name, check `docs/03-MODELS.md` and `docs/04-CLASSES-AND-RULES.md` instead of inventing.
+- Do not add dependencies that need internet at runtime.

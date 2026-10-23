@@ -1,0 +1,14 @@
+# Edit these paths to local dataset folders. Do not point them at a URL.
+path: ../data/datasets/ppe
+train: images/train
+val: images/val
+names:
+  0: helmet
+  1: no_helmet
+  2: vest
+  3: no_vest
+  4: gloves
+  5: no_gloves
+  6: safety_boots
+  7: goggles
+  8: harness
